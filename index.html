@@ -1,917 +1,606 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-  <title>HH | Head Hunters</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #0b0f1c;
-      font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, 'Roboto', sans-serif;
-      color: #eef2ff;
-      line-height: 1.5;
-      padding: 2rem 1.5rem;
-    }
-
-    .wiki-container {
-      max-width: 1400px;
-      margin: 0 auto;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 2rem;
-    }
-
-    .wiki-sidebar {
-      flex: 1.2;
-      min-width: 240px;
-      background: #0f1322;
-      border-radius: 24px;
-      border: 1px solid #252b3d;
-      padding: 1.8rem 1.2rem;
-      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-      height: fit-content;
-      position: sticky;
-      top: 1.5rem;
-    }
-
-    .sidebar-header {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 1.5rem;
-      border-left: 4px solid #ff7e05;
-      padding-left: 1rem;
-    }
-
-    .sidebar-logo {
-      width: 36px;
-      height: 36px;
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    .sidebar-title {
-      font-size: 1.5rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #ffb347, #ff7e05);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .browse-nav {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 0.25rem;
-    }
-
-    .browse-nav .nav-category {
-      font-size: 0.7rem;
-      color: #8a98b9;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      margin-top: 1rem;
-      margin-bottom: 0.3rem;
-      padding-left: 0.5rem;
-    }
-
-    .browse-nav .nav-category:first-of-type {
-      margin-top: 0;
-    }
-
-    .browse-nav li {
-      font-weight: 500;
-      padding: 0.5rem 0.8rem;
-      border-radius: 12px;
-      transition: all 0.2s ease;
-      cursor: pointer;
-      color: #b9c3e6;
-      font-size: 0.9rem;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .browse-nav li:hover {
-      background: #1a1f32;
-      color: white;
-      transform: translateX(3px);
-    }
-
-    .browse-nav li::before {
-      content: "▸";
-      font-size: 0.7rem;
-      color: #ff9f4a;
-      opacity: 0.7;
-    }
-
-    .active-nav {
-      background: #1f253f;
-      color: white !important;
-      border-left: 3px solid #ff7e05;
-    }
-
-    .theme-toggle {
-      margin-top: 1.5rem;
-      padding: 0.5rem 1rem;
-      background: #1a1f32;
-      border: 1px solid #2a314b;
-      border-radius: 40px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      cursor: pointer;
-      font-size: 0.75rem;
-      font-weight: 500;
-      color: #b9c3e6;
-      transition: all 0.2s;
-    }
-
-    .theme-toggle:hover {
-      background: #ff7e05;
-      color: #0a0c1a;
-      border-color: #ff7e05;
-    }
-
-    .wiki-main {
-      flex: 3.8;
-      min-width: 280px;
-    }
-
-    .page-header {
-      background: #0f1322;
-      border-radius: 24px;
-      border: 1px solid #252b3d;
-      padding: 1rem 1.8rem;
-      margin-bottom: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .title-badge h1 {
-      font-size: 1.6rem;
-      font-weight: 700;
-      background: linear-gradient(135deg, #f0f3ff, #ffd7a5);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .title-badge p {
-      font-size: 0.7rem;
-      color: #8a98b9;
-    }
-
-    .owner-profile {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      background: #1a1f32;
-      padding: 0.3rem 1rem 0.3rem 0.8rem;
-      border-radius: 100px;
-      border: 1px solid #ffb34740;
-    }
-
-    .owner-profile a {
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      text-decoration: none;
-      color: inherit;
-    }
-
-    .owner-avatar {
-      width: 38px;
-      height: 38px;
-      border-radius: 50%;
-      background: #1a1f32;
-      overflow: hidden;
-      border: 2px solid #ff9f4a;
-    }
-
-    .owner-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .owner-info .name {
-      font-size: 0.9rem;
-      color: #ffd9a5;
-    }
-
-    .owner-info .tag {
-      font-size: 0.65rem;
-      color: #8a98b9;
-    }
-
-    .banner-container {
-      width: 100%;
-      margin-bottom: 1.5rem;
-      border-radius: 24px;
-      overflow: hidden;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .banner-container img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-
-    .edit-meta {
-      font-size: 0.7rem;
-      background: #0e1222;
-      padding: 0.3rem 1rem;
-      border-radius: 40px;
-      display: inline-block;
-      margin-bottom: 1.2rem;
-      color: #8a98b9;
-    }
-
-    .edit-meta span {
-      color: #ffaa66;
-    }
-
-    .stats-row {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .stat-card {
-      background: #0b0f1a;
-      border: 1px solid #1f253f;
-      border-radius: 20px;
-      padding: 0.8rem 1.2rem;
-      flex: 1;
-      text-align: center;
-    }
-
-    .stat-label {
-      font-size: 0.7rem;
-      color: #8a98b9;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    .stat-value {
-      font-size: 1.8rem;
-      font-weight: 700;
-      color: #ffaa66;
-      line-height: 1.2;
-    }
-
-    /* About Us Section */
-    .about-us {
-      background: #0b0f1a;
-      border-radius: 16px;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-left: 3px solid #ff9f4a;
-    }
-
-    .about-us p {
-      margin-bottom: 0.8rem;
-    }
-
-    .external-links {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-      padding-top: 0.5rem;
-      border-top: 1px solid #1f253f;
-    }
-
-    .external-links a {
-      color: #ffb26e;
-      text-decoration: none;
-      font-size: 0.85rem;
-      transition: color 0.2s;
-    }
-
-    .external-links a:hover {
-      color: #ffaa66;
-      text-decoration: underline;
-    }
-
-    .content-panel {
-      background: #0f1322;
-      border-radius: 24px;
-      border: 1px solid #252b3d;
-      padding: 1.5rem 2rem;
-      backdrop-filter: blur(2px);
-      display: none;
-    }
-
-    .content-panel.active-panel {
-      display: block;
-    }
-
-    .panel-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1.2rem;
-      border-left: 4px solid #ff7e05;
-      padding-left: 1rem;
-      color: #eef2ff;
-    }
-
-    .clan-badge {
-      background: #0b0f1a;
-      border-radius: 16px;
-      padding: 1rem;
-      margin: 1rem 0;
-      border-left: 3px solid #ff9f4a;
-    }
-
-    .info-grid {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin: 1rem 0;
-    }
-
-    .info-block {
-      background: #0b0f1a;
-      border-radius: 16px;
-      padding: 0.8rem;
-      flex: 1 1 170px;
-      border: 1px solid #1f253f;
-    }
-
-    .info-block strong {
-      color: #ffaa66;
-    }
-
-    .apply-button {
-      background: #ff7e05;
-      color: #0a0c1a;
-      padding: 0.6rem 1.5rem;
-      border-radius: 40px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
-      margin-top: 1rem;
-    }
-
-    .support-button {
-      background: #1a1f32;
-      color: #ffb26e;
-      border: 1px solid #2a314b;
-      padding: 0.6rem 1.5rem;
-      border-radius: 40px;
-      text-decoration: none;
-      font-weight: bold;
-      display: inline-block;
-      margin-top: 1rem;
-      transition: 0.2s;
-    }
-
-    .support-button:hover {
-      background: #ff7e05;
-      color: #0a0c1a;
-      border-color: #ff7e05;
-    }
-
-    .social-links {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      margin-top: 1rem;
-    }
-
-    .social-link {
-      background: #1a1f32;
-      padding: 0.5rem 1rem;
-      border-radius: 40px;
-      text-decoration: none;
-      color: #ffb26e;
-      font-size: 0.8rem;
-      transition: 0.2s;
-      border: 1px solid #2a314b;
-    }
-
-    .social-link:hover {
-      background: #ff7e05;
-      color: #0a0c1a;
-    }
-
-    .conduct-list {
-      list-style: none;
-      margin: 1rem 0;
-    }
-
-    .conduct-list li {
-      margin-bottom: 0.8rem;
-      padding-left: 1rem;
-      border-left: 2px solid #ff7e05;
-      color: #b9c3e6;
-    }
-
-    .faq-item {
-      margin-bottom: 1rem;
-      background: #0b0f1a;
-      padding: 0.8rem 1rem;
-      border-radius: 14px;
-      border: 1px solid #1f253f;
-    }
-
-    .faq-question {
-      font-weight: bold;
-      color: #ffaa44;
-      margin-bottom: 0.3rem;
-    }
-
-    .faq-answer {
-      color: #b9c3e6;
-      padding-left: 0.5rem;
-      border-left: 2px solid #ff7e05;
-    }
-
-    .allies-list {
-      display: flex;
-      flex-direction: column;
-      gap: 0.8rem;
-    }
-
-    .ally-card {
-      background: #0b0f1a;
-      padding: 0.8rem 1rem;
-      border-radius: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      border: 1px solid #1f253f;
-    }
-
-    .ally-name {
-      font-size: 1.1rem;
-      font-weight: bold;
-      color: #ffaa44;
-    }
-
-    .ally-link {
-      background: #1a1f32;
-      padding: 0.3rem 0.8rem;
-      border-radius: 40px;
-      text-decoration: none;
-      color: #ffb26e;
-      font-size: 0.7rem;
-      transition: 0.2s;
-    }
-
-    .ally-link:hover {
-      background: #ff7e05;
-      color: #0a0c1a;
-    }
-
-    .member-card {
-      background: #0b0f1a;
-      border-radius: 16px;
-      padding: 0.7rem 1rem;
-      border: 1px solid #1f253f;
-      transition: all 0.2s;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .member-card:hover {
-      border-color: #ff7e05;
-      transform: translateX(5px);
-    }
-
-    .member-avatar {
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      background: #1a1f32;
-      overflow: hidden;
-      border: 2px solid #ff9f4a;
-      flex-shrink: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 1.2rem;
-      color: #ffaa66;
-      text-transform: uppercase;
-    }
-
-    .member-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .member-info {
-      flex: 1;
-    }
-
-    .member-name {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #eef2ff;
-    }
-
-    .member-username {
-      font-size: 0.7rem;
-      color: #8a98b9;
-      margin: 0.2rem 0;
-    }
-
-    .member-username a {
-      color: #8a98b9;
-      text-decoration: none;
-    }
-
-    .member-username a:hover {
-      color: #ffaa66;
-      text-decoration: underline;
-    }
-
-    .member-rank {
-      display: none;
-    }
-
-    .footer-note {
-      margin-top: 2rem;
-      text-align: center;
-      font-size: 0.65rem;
-      color: #5e6a8c;
-      border-top: 1px solid #1f253f;
-      padding-top: 1rem;
-    }
-
-    .back-to-top {
-      position: fixed;
-      bottom: 2rem;
-      right: 2rem;
-      background: #ff7e05;
-      color: #0a0c1a;
-      width: 44px;
-      height: 44px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      font-size: 1.3rem;
-      font-weight: bold;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      transition: all 0.2s;
-      opacity: 0;
-      visibility: hidden;
-      z-index: 1000;
-      border: none;
-    }
-
-    .back-to-top.show {
-      opacity: 1;
-      visibility: visible;
-    }
-
-    .back-to-top:hover {
-      background: #e06e00;
-      transform: scale(1.05);
-    }
-
-    @media (max-width: 780px) {
-      body {
-        padding: 1rem;
-      }
-
-      .wiki-sidebar {
-        position: relative;
-        top: 0;
-      }
-
-      .content-panel {
-        padding: 1rem;
-      }
-
-      .member-card {
-        flex-wrap: wrap;
-      }
-
-      .member-avatar {
-        width: 36px;
-        height: 36px;
-      }
-
-      .back-to-top {
-        bottom: 1rem;
-        right: 1rem;
-        width: 38px;
-        height: 38px;
-        font-size: 1.1rem;
-      }
-
-      .stats-row {
-        flex-direction: column;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyEmbeds – Discord Webhook Builder</title>
+    <link rel="icon" type="image/png" href="https://files.catbox.moe/x9w3b6.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #1e1f22; font-family: 'Segoe UI', system-ui, sans-serif; color: #e1e4e8; padding: 16px; font-size: 13px; transition: background 0.2s, color 0.2s; }
+        
+        body.light-mode { background: #f5f5f5; color: #111214; }
+        body.light-mode .editor-panel { background: #ffffff; }
+        body.light-mode .preview-panel { background: #f0f0f0; border-color: #ccc; }
+        body.light-mode .preview-embed, body.light-mode .preview-simple-message { background: #ffffff; border-color: #ddd; }
+        body.light-mode .embed-tab, body.light-mode .social-btn { background: #e0e0e0; border-color: #ccc; color: #111; }
+        body.light-mode .embed-tab.active { background: #5865f2; color: white; }
+        body.light-mode .form-group input, body.light-mode .form-group textarea, 
+        body.light-mode .simple-msg-area textarea, body.light-mode .webhook-row input, 
+        body.light-mode .json-editor textarea { background: #fff; color: #111; border-color: #ccc; }
+        body.light-mode .status-msg { background: #e0e0e0; }
+        body.light-mode .mode-toggle { background: #e0e0e0; }
+        body.light-mode .add-embed-btn { background: #e0e0e0; color: #111; }
+        body.light-mode .fields-container { background: #f0f0f0; }
+        body.light-mode .field-item { background: #e8e8e8; }
+        body.light-mode h1 { background: linear-gradient(120deg, #5865f2, #4752c4); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        body.light-mode .logo img { filter: invert(1); }
+        body.light-mode .webhook-info { background: #e8e8e8; }
+        body.light-mode .changelog-overlay .changelog { background: #fff; color: #111; }
+        
+        .app { max-width: 1400px; margin: 0 auto; }
+        .header { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; margin-bottom: 6px; }
+        .header-left { display: flex; align-items: center; gap: 10px; }
+        .logo { width: 36px; height: 36px; background: #2b2d31; border-radius: 12px; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .logo img { width: 100%; height: 100%; object-fit: cover; }
+        h1 { font-size: 1.3rem; font-weight: 700; background: linear-gradient(120deg, #ffffff, #b5bac1); background-clip: text; -webkit-background-clip: text; color: transparent; }
+        .header-right { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+        .social-btn, .support-btn, .theme-btn, .changelog-btn { padding: 4px 10px; border-radius: 24px; text-decoration: none; font-weight: 500; font-size: 0.7rem; display: inline-flex; align-items: center; gap: 4px; transition: 0.2s; cursor: pointer; border: none; }
+        .social-btn { background: #2b2d31; border: 1px solid #3c3f45; color: white; }
+        .support-btn { background: #5865f2; color: white; }
+        .theme-btn { background: #4e5058; color: white; }
+        .changelog-btn { background: #23a559; color: white; }
+        .builder { display: flex; gap: 16px; flex-wrap: wrap; }
+        .editor-panel, .preview-panel { padding: 14px; border-radius: 12px; }
+        .editor-panel { flex: 1.2; min-width: 280px; background: #2b2d31; }
+        .preview-panel { flex: 1; min-width: 280px; background: #1e1f22; border: 1px solid #3c3f45; }
+        .panel-title { font-size: 1rem; margin-bottom: 12px; padding-bottom: 8px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: space-between; border-bottom: 1px solid #3c3f45; }
+        .mode-toggle { display: flex; gap: 4px; background: #1e1f22; padding: 2px; border-radius: 24px; }
+        .mode-btn { padding: 4px 12px; font-size: 0.7rem; border-radius: 20px; background: none; border: none; cursor: pointer; color: #b5bac1; }
+        .mode-btn.active { background: #5865f2; color: white; }
+        
+        .webhook-row { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .webhook-row input { flex: 2; background: #111214; border: 1px solid #3c3f45; padding: 8px 12px; border-radius: 10px; color: white; font-size: 0.8rem; }
+        .webhook-row button { background: #5865f2; border: none; padding: 0 14px; border-radius: 10px; font-weight: 600; cursor: pointer; color: white; font-size: 0.75rem; }
+        .load-webhook-btn { background: #4e5058 !important; }
+        .load-webhook-btn:hover { background: #5865f2 !important; }
+        
+        .webhook-info { background: #2b2d31; border-radius: 10px; padding: 8px 12px; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; border-left: 3px solid #5865f2; }
+        .webhook-avatar { width: 32px; height: 32px; border-radius: 50%; background: #1e1f22; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .webhook-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .webhook-avatar i { font-size: 1.2rem; color: #5865f2; }
+        .webhook-name { font-weight: 600; font-size: 0.8rem; flex: 1; }
+        .webhook-name i { color: #5865f2; margin-right: 5px; }
+        .reload-webhook { background: none; border: none; color: #b5bac1; cursor: pointer; font-size: 0.7rem; padding: 4px 8px; border-radius: 16px; }
+        .reload-webhook:hover { background: #4e5058; color: white; }
+        
+        .simple-msg-area { margin-bottom: 16px; position: relative; }
+        .simple-msg-area label { font-size: 0.7rem; margin-bottom: 4px; display: block; }
+        .simple-msg-area textarea { font-size: 0.75rem; padding: 8px; border-radius: 10px; background: #111214; border: 1px solid #3c3f45; color: white; width: 100%; resize: vertical; font-family: inherit; }
+        
+        .embed-toolbar { display: flex; justify-content: space-between; align-items: center; margin: 10px 0 8px; }
+        .embed-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 12px; }
+        .embed-tab { background: #1e1f22; padding: 4px 12px; border-radius: 24px; cursor: pointer; font-size: 0.7rem; border: 1px solid #3c3f45; display: inline-flex; align-items: center; gap: 6px; }
+        .embed-tab.active { background: #5865f2; }
+        .delete-embed { background: none; border: none; color: #f23f42; margin-left: 6px; cursor: pointer; font-size: 0.7rem; }
+        .duplicate-embed { background: none; border: none; color: #23a559; cursor: pointer; font-size: 0.7rem; }
+        .add-embed-btn { background: #2b2d31; border: 1px dashed #5865f2; border-radius: 24px; padding: 4px 12px; font-size: 0.7rem; cursor: pointer; color: #b5bac1; }
+        .form-group { margin-bottom: 12px; position: relative; }
+        label { font-size: 0.7rem; margin-bottom: 4px; display: block; }
+        input, textarea, .color-row { width: 100%; background: #111214; border: 1px solid #3c3f45; border-radius: 8px; padding: 6px 8px; color: white; font-size: 0.75rem; }
+        .color-row { display: flex; align-items: center; gap: 8px; padding: 4px 8px; }
+        .color-row input[type="color"] { width: 36px; height: 28px; padding: 0; }
+        .fields-container { background: #1e1f22; border-radius: 10px; padding: 8px; margin-top: 6px; }
+        .field-item { background: #2b2d31; border-radius: 8px; padding: 8px; margin-bottom: 8px; }
+        .remove-field { background: #f23f42; border: none; color: white; padding: 3px 8px; border-radius: 16px; cursor: pointer; font-size: 0.65rem; margin-top: 4px; }
+        .add-field-btn { background: #2b2d31; border: 1px solid #5865f2; border-radius: 20px; padding: 4px 10px; font-size: 0.7rem; cursor: pointer; margin-top: 6px; }
+        .json-editor { display: none; }
+        .json-editor textarea { width: 100%; min-height: 300px; font-family: monospace; font-size: 0.7rem; padding: 8px; background: #111214; border: 1px solid #3c3f45; border-radius: 8px; color: white; }
+        .json-actions { margin-top: 8px; display: flex; gap: 8px; }
+        .json-actions button { background: #4e5058; border: none; padding: 5px 12px; border-radius: 6px; cursor: pointer; color: white; font-size: 0.7rem; }
+        .visual-editor { display: block; }
+        
+        .preview-simple-message { background: #2b2d31; border-radius: 10px; padding: 10px; margin-bottom: 12px; font-size: 0.8rem; white-space: pre-wrap; }
+        .preview-embed { background: #2b2d31; border-radius: 10px; margin-bottom: 12px; border-left: 2px solid #5865f2; padding: 10px; }
+        .embed-author { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 0.75rem; }
+        .embed-author img { width: 18px; height: 18px; border-radius: 50%; }
+        .embed-title { font-size: 1rem; font-weight: 600; margin-bottom: 4px; }
+        .embed-desc { font-size: 0.75rem; margin: 6px 0; color: #dbdee1; white-space: pre-wrap; }
+        .embed-fields { display: flex; flex-wrap: wrap; gap: 8px; margin: 6px 0; }
+        .field { flex: 1; min-width: 140px; background: #1e1f22; padding: 6px; border-radius: 6px; }
+        .field-name { font-weight: 600; font-size: 0.7rem; }
+        .field-value { font-size: 0.7rem; color: #b5bac1; white-space: pre-wrap; }
+        .embed-footer { font-size: 0.65rem; margin-top: 8px; border-top: 1px solid #3c3f45; padding-top: 6px; display: flex; justify-content: space-between; }
+        .embed-img img, .embed-thumb img { max-width: 100%; border-radius: 8px; max-height: 150px; margin-top: 6px; }
+        .status-msg { margin-top: 12px; padding: 8px; border-radius: 8px; background: #111214; font-size: 0.7rem; }
+        button:active { transform: scale(0.98); }
+        
+        .emoji-picker { display: none; position: absolute; background: #2b2d31; border: 1px solid #3c3f45; border-radius: 12px; padding: 8px; width: 260px; max-height: 180px; overflow-y: auto; z-index: 100; flex-wrap: wrap; gap: 4px; }
+        body.light-mode .emoji-picker { background: #fff; border-color: #ccc; }
+        .emoji-picker span { cursor: pointer; font-size: 1.2rem; padding: 4px; border-radius: 6px; display: inline-block; }
+        .emoji-picker span:hover { background: #5865f2; }
+        .emoji-btn { background: none; border: none; cursor: pointer; color: #b5bac1; font-size: 0.8rem; margin-left: 4px; }
+        body.light-mode .emoji-btn { color: #5865f2; }
+        .label-with-emoji { display: flex; align-items: center; gap: 4px; flex-wrap: wrap; }
+        
+        .changelog-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+        .changelog { background: #1e1f22; border-radius: 16px; padding: 20px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; border-left: 4px solid #5865f2; }
+        .changelog h2 { margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .changelog ul { margin-left: 20px; margin-bottom: 16px; }
+        .changelog li { margin: 8px 0; font-size: 0.8rem; }
+        .close-changelog { background: #5865f2; border: none; padding: 8px 20px; border-radius: 8px; cursor: pointer; color: white; font-size: 0.75rem; margin-top: 8px; }
+    </style>
 </head>
 <body>
-  <div class="wiki-container">
-    <aside class="wiki-sidebar">
-      <div class="sidebar-header">
-        <img class="sidebar-logo" src="https://files.catbox.moe/kxj49g.png" alt="HH Logo">
-        <span class="sidebar-title">HH WIKI</span>
-      </div>
-      <ul class="browse-nav">
-        <li class="nav-category">MAIN</li>
-        <li data-panel="information">Information</li>
-        <li data-panel="conduct">Code of Conduct</li>
-        <li data-panel="faq">FAQ</li>
-        <li class="nav-category">CLAN</li>
-        <li data-panel="allies">Allies</li>
-        <li data-panel="apply">Apply</li>
-        <li data-panel="support">Support Ticket</li>
-        <li data-panel="owner">Founders</li>
-        <li class="nav-category">TESTS</li>
-        <li data-panel="tryout">Tryout Info</li>
-        <li data-panel="entrytest">Entry Test</li>
-        <li data-panel="finaltest">Final Test</li>
-        <li class="nav-category">UPDATES</li>
-        <li data-panel="news">News</li>
-      </ul>
-      <div class="theme-toggle" id="themeToggle">🌓 Dark / Light Mode</div>
-      <div style="margin-top: 1rem; font-size: 0.6rem; background: #0b0f1a; border-radius: 16px; padding: 0.6rem; text-align: center; border: 1px solid #1f253f;">
-        HH | Head Hunters<br>Hunt or be hunted
-      </div>
-    </aside>
-
-    <main class="wiki-main">
-      <div class="page-header">
-        <div class="title-badge">
-          <h1>HH | HEAD HUNTERS</h1>
-          <p>Hunt or be hunted · Rivals Division</p>
+<div class="app">
+    <div class="header">
+        <div class="header-left">
+            <div class="logo"><img src="https://files.catbox.moe/x9w3b6.png" alt="EasyEmbeds Logo"></div>
+            <h1><i class="fab fa-discord"></i> EasyEmbeds</h1>
         </div>
-        <div class="owner-profile">
-          <a href="https://www.roblox.com/users/4221202613/profile" target="_blank">
-            <div class="owner-avatar">
-              <img src="https://files.catbox.moe/nadul8.png" alt="fistygamerz">
+        <div class="header-right">
+            <button id="changelogBtn" class="changelog-btn"><i class="fas fa-gift"></i> What's New</button>
+            <button id="themeToggleBtn" class="theme-btn"><i class="fas fa-moon"></i> Theme</button>
+            <a href="https://www.youtube.com/@easyembeds" target="_blank" class="social-btn"><i class="fab fa-youtube"></i> YouTube</a>
+            <a href="https://x.com/EasyEmbeds" target="_blank" class="social-btn"><i class="fab fa-x-twitter"></i> X</a>
+            <a href="https://discord.gg/pt2fHbMckc" target="_blank" class="support-btn"><i class="fas fa-headset"></i> Support</a>
+        </div>
+    </div>
+    <div class="sub">Discord webhook builder – Webhook preview, duplicate embeds, JSON editor, emoji picker, dark/light theme.</div>
+
+    <div class="builder">
+        <div class="editor-panel">
+            <div class="webhook-row">
+                <input type="text" id="webhookUrl" placeholder="Paste Discord webhook URL...">
+                <button id="loadWebhookBtn" class="load-webhook-btn"><i class="fas fa-sync-alt"></i> Load</button>
+                <button id="sendBtn"><i class="fas fa-paper-plane"></i> Send</button>
             </div>
-            <div class="owner-info">
-              <div class="name">fistygamerz</div>
-              <div class="tag">Founder</div>
+            
+            <div id="webhookInfoContainer"></div>
+            
+            <div class="simple-msg-area">
+                <div class="label-with-emoji"><label>Simple Message (optional)</label><button class="emoji-btn" id="emojiBtnMsg"><i class="fas fa-smile"></i></button></div>
+                <textarea id="simpleMessage" rows="2" placeholder="Plain text..."></textarea>
+                <div id="emojiPickerMsg" class="emoji-picker"></div>
             </div>
-          </a>
+            <div class="panel-title">
+                <span>Embeds</span>
+                <div class="mode-toggle">
+                    <button id="visualModeBtn" class="mode-btn active">Visual</button>
+                    <button id="jsonModeBtn" class="mode-btn">JSON</button>
+                </div>
+            </div>
+            <div id="visualEditor" class="visual-editor">
+                <div class="embed-toolbar">
+                    <div class="embed-list" id="embedList"></div>
+                    <button class="add-embed-btn" id="addEmbedBtn">+ Add embed</button>
+                </div>
+                <div id="currentEditor"></div>
+            </div>
+            <div id="jsonEditor" class="json-editor">
+                <textarea id="jsonPayload"></textarea>
+                <div class="json-actions">
+                    <button id="applyJsonBtn">Apply & Sync</button>
+                    <button id="formatJsonBtn">Format</button>
+                </div>
+                <div class="status-msg" style="margin-top: 8px;" id="jsonStatus">Edit JSON, then click Apply.</div>
+            </div>
         </div>
-      </div>
+        <div class="preview-panel">
+            <div class="panel-title">Live preview</div>
+            <div id="previewContainer"></div>
+            <div class="status-msg" id="statusMsg">Ready. Paste webhook URL → click Load → build → Send.</div>
+        </div>
+    </div>
+</div>
 
-      <div class="banner-container">
-        <img src="https://files.catbox.moe/fp35ee.webp" alt="HH Banner">
-      </div>
-
-      <div class="edit-meta">LAST EDITED BY <span>fistygamerz</span> · 05/01/2026</div>
-
-      <!-- INFORMATION PANEL -->
-      <div id="panel-information" class="content-panel active-panel">
-        <div class="stats-row">
-          <div class="stat-card">
-            <div class="stat-label">📊 TOTAL VISITS</div>
-            <div class="stat-value" id="visitorCount">--</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-label">🏆 CLAN MEMBERS</div>
-            <div class="stat-value" id="memberCount">0</div>
-          </div>
-        </div>
-
-        <div class="panel-title">ABOUT US</div>
-        <div class="about-us">
-          <p><strong>HH | Head Hunters</strong> is an elite, competitive Roblox Rivals clan built on discipline, coordination, and raw competitive instinct. We were founded in 2023 and rebranded to Head Hunters in 2026, embodying the motto "Hunt or be hunted".</p>
-          <p>We focus on tactical gameplay, absolute focus, and relentless improvement. This is more than a team – it's a brotherhood of hunters. We move as one, strike as one. Only the strong rise.</p>
-          <p>Our Rivals division currently holds a Top 100 Global rank, competing in 5v5 competitive matches. We run weekly clan wars, regular tryouts, and maintain a strict code of conduct to ensure a respectful, non-toxic environment.</p>
-          <div class="external-links">
-            <a href="https://www.roblox.com/communities/32380100/Legion-Community-Server" target="_blank">🎮 Roblox Group</a>
-            <a href="https://discord.gg/dKPff6gdsK" target="_blank">💬 Join our Discord</a>
-            <a href="https://discord.com/channels/1478711010092388392/1491058033520804025" target="_blank">📝 Apply to Join</a>
-          </div>
-        </div>
-
-        <div class="panel-title">CLAN INFORMATION</div>
-        <div class="clan-badge">
-          <strong>HH | Head Hunters</strong><br>Elite hunters dominating the Rivals scene. Built on skill, strategy, and respect.
-        </div>
-        <div class="info-grid">
-          <div class="info-block"><strong>Founded</strong><br>2023 · Rebranded 2026</div>
-          <div class="info-block"><strong>Motto</strong><br>Hunt or be hunted</div>
-          <div class="info-block"><strong>Rivals Rank</strong><br>Top 100 Global</div>
-          <div class="info-block"><strong>Game Mode</strong><br>5v5 · Competitive</div>
-        </div>
-        <div style="background: #0b0f1a; border-radius: 16px; padding: 0.8rem; border: 1px solid #1f253f;">
-          <span>🔹 <strong>Current Status:</strong> Recruiting active hunters | Tryouts every Friday 6PM UTC</span><br>
-          <span>🔹 <strong>Clan Wars:</strong> Weekly battles vs top Rivals clans</span><br>
-          <span>🔹 <strong>Requirements:</strong> 50+ wins, microphone, loyalty to HH</span>
-        </div>
-        <div class="social-links">
-          <a href="https://discord.gg/dKPff6gdsK" target="_blank" class="social-link">💬 Join our Discord</a>
-          <a href="https://www.roblox.com/communities/32380100/Legion-Community-Server#!/about" target="_blank" class="social-link">🎮 Roblox Group</a>
-        </div>
-      </div>
-
-      <!-- CODE OF CONDUCT -->
-      <div id="panel-conduct" class="content-panel">
-        <div class="panel-title">CODE OF CONDUCT</div>
-        <div class="clan-badge"><strong>HH | Standards & Discipline</strong><br>Every member represents the clan. Act accordingly.</div>
-        <ul class="conduct-list">
-          <li><strong>1. Respect Everyone</strong> – No bullying, harassment, or hate speech.</li>
-          <li><strong>2. No Cheating / Exploiting</strong> – Zero tolerance = instant ban.</li>
-          <li><strong>3. Be Active</strong> – Log in at least once a week. 30 days inactive = removal.</li>
-          <li><strong>4. Follow Staff Instructions</strong> – Appeals must be private.</li>
-          <li><strong>5. Represent HH Well</strong> – No trolling other clans.</li>
-          <li><strong>6. No Account Sharing</strong> – Alt accounts used to bypass bans are forbidden.</li>
+<!-- Changelog Modal -->
+<div id="changelogModal" class="changelog-overlay">
+    <div class="changelog">
+        <h2><i class="fas fa-gift"></i> What's New</h2>
+        <ul>
+            <li><strong>🖼️ Webhook Name & Avatar</strong> – Shows in live preview after clicking Load.</li>
+            <li><strong>✨ Duplicate Embed</strong> – Clone any embed with one click.</li>
+            <li><strong>😀 Emoji Picker</strong> – Click smiley icon to insert emojis.</li>
+            <li><strong>🌓 Dark/Light Theme</strong> – Toggle between themes.</li>
+            <li><strong>📝 JSON Editor</strong> – Switch between Visual and JSON mode.</li>
+            <li><strong>🎨 Color Picker</strong> – Choose any color for embed border.</li>
+            <li><strong>📎 Multiple Embeds</strong> – Add, duplicate, delete embeds.</li>
         </ul>
-        <div style="background:#0b0f1a; border-radius:14px; padding:0.8rem; border:1px solid #1f253f;"><strong>Punishment System:</strong> Warning → Suspension → Demotion → Ban</div>
-      </div>
+        <button id="closeChangelog" class="close-changelog">Got it!</button>
+    </div>
+</div>
 
-      <!-- FAQ -->
-      <div id="panel-faq" class="content-panel">
-        <div class="panel-title">FREQUENTLY ASKED QUESTIONS</div>
-        <div class="faq-item"><div class="faq-question">How do I join HH?</div><div class="faq-answer">Click "Apply" in the sidebar.</div></div>
-        <div class="faq-item"><div class="faq-question">Requirements?</div><div class="faq-answer">50+ wins, mic, loyalty.</div></div>
-        <div class="faq-item"><div class="faq-question">How to rank up?</div><div class="faq-answer">Be active, join wars, help recruit.</div></div>
-        <div class="faq-item"><div class="faq-question">Going inactive?</div><div class="faq-answer">Tell a Co Owner or Owner.</div></div>
-        <div class="faq-item"><div class="faq-question">Breaking rules?</div><div class="faq-answer">Warning → Suspension → Demotion → Ban.</div></div>
-        <div class="faq-item"><div class="faq-question">How to report someone?</div><div class="faq-answer">DM a Commander or higher.</div></div>
-      </div>
-
-      <!-- ALLIES -->
-      <div id="panel-allies" class="content-panel">
-        <div class="panel-title">ALLIES & PARTNERS</div>
-        <div class="clan-badge">SPG Rivals Division has officially merged into HH. Welcome to all former SPG members!</div>
-        <div class="allies-list">
-          <div class="ally-card"><div class="ally-name">SPG (Merged)</div><span style="color:#88ffaa;">✓ Now part of HH</span></div>
-        </div>
-      </div>
-
-      <!-- APPLY PANEL -->
-      <div id="panel-apply" class="content-panel">
-        <div class="panel-title">APPLY TO JOIN HH</div>
-        <div style="background:#0b0f1a; border-radius:20px; padding:1rem; border:1px solid #1f253f;">
-          <a href="https://discord.com/channels/1478711010092388392/1491058033520804025" target="_blank" class="apply-button">APPLY NOW →</a>
-        </div>
-      </div>
-
-      <!-- SUPPORT TICKET PANEL -->
-      <div id="panel-support" class="content-panel">
-        <div class="panel-title">SUPPORT TICKET</div>
-        <div class="clan-badge">
-          <p>Click the button below to create a support ticket. A staff member will respond as soon as possible.</p>
-          <p>Describe your issue clearly when the ticket opens.</p>
-          <a href="https://discord.com/channels/1478711010092388392/1494962347410849873" target="_blank" class="support-button">SUPPORT CHANNEL →</a>
-        </div>
-      </div>
-
-      <!-- OWNERS PANEL -->
-      <div id="panel-owner" class="content-panel">
-        <div class="panel-title">CLAN FOUNDERS</div>
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
-          <div class="member-card">
-            <div class="member-avatar"><img src="https://files.catbox.moe/nadul8.png" alt="fistygamerz"></div>
-            <div class="member-info">
-              <div class="member-name">fistygamerz</div>
-              <div class="member-username"><a href="https://www.roblox.com/users/4221202613/profile" target="_blank">@fistygamerz</a></div>
-              <div class="member-rank">Founder</div>
-            </div>
-          </div>
-          <div class="member-card">
-            <div class="member-avatar"><img src="https://files.catbox.moe/ihd16j.png" alt="BeastBoys918"></div>
-            <div class="member-info">
-              <div class="member-name">BeastBoys918</div>
-              <div class="member-username"><a href="https://www.roblox.com/users/5088373156/profile" target="_blank">@BeastBoys918</a></div>
-              <div class="member-rank">Founder</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- TRYOUT INFO -->
-      <div id="panel-tryout" class="content-panel">
-        <div class="panel-title">TRYOUT INFORMATION</div>
-        <div class="clan-badge">
-          <div style="display:inline-block; padding:0.2rem 1rem; border-radius:40px; background:#9e2d2d; color:white; margin-bottom:0.5rem;">🔴 TRYOUTS: CLOSED</div>
-          <p><strong>Current Status:</strong> No tryouts are scheduled at this time.</p>
-          <p>When tryouts are open, join the "Tryout Voice" channel and wait for a staff member.</p>
-          <p>Requirements: 50+ Rivals wins, working microphone, respect.</p>
-        </div>
-      </div>
-
-      <!-- ENTRY TEST & FINAL TEST -->
-      <div id="panel-entrytest" class="content-panel">
-        <div class="panel-title">ENTRY TEST</div>
-        <div class="clan-badge">Complete aim trainer + movement course on "Crossroads". Required: 40 kills. Tests can be done whenever staff are available.</div>
-      </div>
-      <div id="panel-finaltest" class="content-panel">
-        <div class="panel-title">FINAL TEST</div>
-        <div class="clan-badge">1v1 ranked duel vs a Founder or Co Owner. Achieve "Elite Commander" status.</div>
-      </div>
-
-      <!-- NEWS PANEL -->
-      <div id="panel-news" class="content-panel">
-        <div class="panel-title">LATEST NEWS</div>
-        <div style="background:#0b0f1a; border-radius:20px; padding:1rem; border:1px solid #1f253f;">
-          <strong>📢 Welcome to HH | Head Hunters</strong><br>
-          <em>May 01, 2026</em><br><br>
-          We have officially rebranded from FST to HH | Head Hunters. New name, same elite team.<br><br>
-          Check #announcements on Discord for more details.
-        </div>
-      </div>
-
-      <div class="footer-note">HH | HEAD HUNTERS · Maintained by fistygamerz</div>
-    </main>
-  </div>
-
-  <button class="back-to-top" id="backToTopBtn">↑</button>
-
-  <script>
-    // Visitor counter
-    fetch('https://api.countapi.xyz/hit/hh_clan_wiki/visits')
-      .then(res => res.json())
-      .then(data => {
-        document.getElementById('visitorCount').innerText = data.value;
-      })
-      .catch(() => {
-        document.getElementById('visitorCount').innerText = '?';
-      });
-
-    // Back to Top
-    const backBtn = document.getElementById('backToTopBtn');
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) backBtn.classList.add('show');
-      else backBtn.classList.remove('show');
-    });
-    backBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-
-    // Dark/Light Mode
-    const toggleBtn = document.getElementById('themeToggle');
-    const body = document.body;
-    if (localStorage.getItem('theme') === 'light') {
-      body.style.background = "#f0f2f5";
+<script>
+    // Changelog
+    let changelogShown = sessionStorage.getItem('easyembeds_changelog_v4');
+    if (!changelogShown) {
+        document.getElementById('changelogModal').style.display = 'flex';
+        sessionStorage.setItem('easyembeds_changelog_v4', 'true');
     }
-    toggleBtn.addEventListener('click', () => {
-      if (body.style.background === "rgb(240, 242, 245)") {
-        body.style.background = "#0b0f1c";
-        localStorage.setItem('theme', 'dark');
-      } else {
-        body.style.background = "#f0f2f5";
-        localStorage.setItem('theme', 'light');
-      }
+    document.getElementById('changelogBtn')?.addEventListener('click', () => {
+        document.getElementById('changelogModal').style.display = 'flex';
+    });
+    document.getElementById('closeChangelog')?.addEventListener('click', () => {
+        document.getElementById('changelogModal').style.display = 'none';
+    });
+    window.addEventListener('click', (e) => {
+        if (e.target === document.getElementById('changelogModal')) {
+            document.getElementById('changelogModal').style.display = 'none';
+        }
     });
 
-    // Navigation
-    const navItems = document.querySelectorAll('.browse-nav li[data-panel]');
-    const panels = {
-      information: document.getElementById('panel-information'),
-      conduct: document.getElementById('panel-conduct'),
-      faq: document.getElementById('panel-faq'),
-      allies: document.getElementById('panel-allies'),
-      apply: document.getElementById('panel-apply'),
-      support: document.getElementById('panel-support'),
-      owner: document.getElementById('panel-owner'),
-      tryout: document.getElementById('panel-tryout'),
-      entrytest: document.getElementById('panel-entrytest'),
-      finaltest: document.getElementById('panel-finaltest'),
-      news: document.getElementById('panel-news')
-    };
-    function activatePanel(panelId) {
-      Object.values(panels).forEach(p => {
-        if (p) p.classList.remove('active-panel');
-      });
-      if (panels[panelId]) panels[panelId].classList.add('active-panel');
-      navItems.forEach(item => {
-        item.classList.remove('active-nav');
-        if (item.getAttribute('data-panel') === panelId) item.classList.add('active-nav');
-      });
+    function escapeHtml(str) { return String(str ?? '').replace(/[&<>]/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;' }[m])); }
+    function intToHex(c) { return '#' + (c & 0xFFFFFF).toString(16).padStart(6,'0'); }
+
+    // Webhook Info
+    let currentWebhookInfo = null;
+    
+    async function fetchWebhookInfo(url) {
+        if (!url || !url.startsWith('https://discord.com/api/webhooks/')) {
+            currentWebhookInfo = null;
+            updateWebhookInfoDisplay();
+            showStatus("❌ Invalid webhook URL", false);
+            return;
+        }
+        showStatus("🔄 Fetching webhook info...", false);
+        try {
+            const response = await fetch(url);
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);
+            const data = await response.json();
+            let avatarUrl = null;
+            if (data.avatar) {
+                avatarUrl = `https://cdn.discordapp.com/avatars/${data.id}/${data.avatar}.png?size=40`;
+            }
+            currentWebhookInfo = {
+                name: data.name || "Unnamed Webhook",
+                avatar_url: avatarUrl,
+                id: data.id
+            };
+            updateWebhookInfoDisplay();
+            showStatus(`✅ Loaded: ${currentWebhookInfo.name}`, true);
+        } catch (err) {
+            currentWebhookInfo = null;
+            updateWebhookInfoDisplay();
+            showStatus("❌ Failed to load webhook info", false);
+        }
     }
-    navItems.forEach(item => {
-      item.addEventListener('click', () => {
-        const panelId = item.getAttribute('data-panel');
-        if (panelId && panels[panelId]) activatePanel(panelId);
-      });
+    
+    function updateWebhookInfoDisplay() {
+        const container = document.getElementById('webhookInfoContainer');
+        if (!container) return;
+        if (currentWebhookInfo && currentWebhookInfo.name) {
+            let avatarHtml = `<i class="fab fa-discord" style="font-size: 1.2rem;"></i>`;
+            if (currentWebhookInfo.avatar_url) {
+                avatarHtml = `<img src="${currentWebhookInfo.avatar_url}" onerror="this.src='https://cdn.discordapp.com/embed/avatars/0.png';">`;
+            }
+            container.innerHTML = `
+                <div class="webhook-info">
+                    <div class="webhook-avatar">${avatarHtml}</div>
+                    <div class="webhook-name"><i class="fas fa-paper-plane"></i> ${escapeHtml(currentWebhookInfo.name)}</div>
+                    <button id="reloadWebhookBtn" class="reload-webhook"><i class="fas fa-sync-alt"></i></button>
+                </div>
+            `;
+            document.getElementById('reloadWebhookBtn')?.addEventListener('click', () => {
+                fetchWebhookInfo(document.getElementById('webhookUrl').value.trim());
+            });
+        } else {
+            container.innerHTML = `<div class="webhook-info" style="opacity:0.6;"><div class="webhook-avatar"><i class="fab fa-discord"></i></div><div class="webhook-name">No webhook loaded — paste URL and click "Load"</div></div>`;
+        }
+    }
+
+    document.getElementById('loadWebhookBtn')?.addEventListener('click', () => {
+        fetchWebhookInfo(document.getElementById('webhookUrl').value.trim());
     });
-    activatePanel('information');
-  </script>
+
+    // Emoji picker
+    const emojis = ["😀","😃","😄","😁","😆","😅","😂","🤣","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚","😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓","🤗","🤔","🤭","🤫","🤥","😶","😐","😑","😬","🙄","😯","😦","😧","😮","😲","🥱","😴","🤤","😪","😵","🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕","🤑","🤠","😈","👿","👹","👺","🤡","💩","👻","💀","☠️","👽","🤖","🎃","👍","👎","👌","✌️","🤞","🤟","🤘","👏","🙌","👐","🤲","🤝","🙏","❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❣️","💕","💞","💓","💗","💖","💘","💝","🎉","✨","⭐","🌟","🔥","💧","💦","☀️","🌙","⭐","🌈","⚡","❄️","🔥","💨","💢","💥","💫","💦","💤","⭐","🌟","💯","❗","❓","⁉️","‼️","🔴","🟠","🟡","🟢","🔵","🟣","⚫","⚪","🟤"];
+
+    function createEmojiPicker(containerId, targetInputId) {
+        const picker = document.getElementById(containerId);
+        const input = document.getElementById(targetInputId);
+        if (!picker || !input) return;
+        picker.innerHTML = '';
+        emojis.forEach(emoji => {
+            const span = document.createElement('span');
+            span.textContent = emoji;
+            span.onclick = (e) => {
+                e.stopPropagation();
+                const start = input.selectionStart;
+                const end = input.selectionEnd;
+                const text = input.value;
+                input.value = text.substring(0, start) + emoji + text.substring(end);
+                input.dispatchEvent(new Event('input'));
+                picker.style.display = 'none';
+                input.focus();
+            };
+            picker.appendChild(span);
+        });
+    }
+
+    // Global data
+    let embeds = [{
+        title: "Welcome To EasyEmbeds",
+        description: "Build beautiful Discord messages with multiple embeds. Edit fields on the left.",
+        color: 0x5865f2,
+        author: { name: "", icon_url: "", url: "" },
+        footer: { text: "", icon_url: "" },
+        timestamp: null,
+        thumbnail: { url: "" },
+        image: { url: "" },
+        fields: []
+    }];
+    let selectedEmbedIndex = 0;
+    let currentMode = "visual";
+
+    const visualEditorDiv = document.getElementById('visualEditor');
+    const jsonEditorDiv = document.getElementById('jsonEditor');
+    const jsonTextarea = document.getElementById('jsonPayload');
+    const simpleMessageInput = document.getElementById('simpleMessage');
+
+    // Theme toggle
+    let isDarkMode = true;
+    document.getElementById('themeToggleBtn')?.addEventListener('click', () => {
+        isDarkMode = !isDarkMode;
+        if (isDarkMode) {
+            document.body.classList.remove('light-mode');
+            document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-moon"></i> Theme';
+        } else {
+            document.body.classList.add('light-mode');
+            document.getElementById('themeToggleBtn').innerHTML = '<i class="fas fa-sun"></i> Theme';
+        }
+    });
+
+    function rebuildEditorUI() {
+        const embed = embeds[selectedEmbedIndex];
+        if (!embed) return;
+        const editorDiv = document.getElementById('currentEditor');
+        if (!editorDiv) return;
+        editorDiv.innerHTML = `
+            <div class="form-group">
+                <div class="label-with-emoji"><label>Title</label><button class="emoji-btn" id="emojiBtnTitle"><i class="fas fa-smile"></i></button></div>
+                <input type="text" id="titleInput" value="${escapeHtml(embed.title)}">
+                <div id="emojiPickerTitle" class="emoji-picker"></div>
+            </div>
+            <div class="form-group">
+                <div class="label-with-emoji"><label>Description</label><button class="emoji-btn" id="emojiBtnDesc"><i class="fas fa-smile"></i></button></div>
+                <textarea id="descInput">${escapeHtml(embed.description)}</textarea>
+                <div id="emojiPickerDesc" class="emoji-picker"></div>
+            </div>
+            <div class="form-group"><label>Color</label><div class="color-row"><input type="color" id="colorPicker" value="${intToHex(embed.color)}"><span>${intToHex(embed.color)}</span></div></div>
+            <div class="form-group"><label>Author Name</label><input type="text" id="authorName" value="${escapeHtml(embed.author.name)}"></div>
+            <div class="form-group"><label>Author Icon URL</label><input type="text" id="authorIcon" value="${escapeHtml(embed.author.icon_url)}"></div>
+            <div class="form-group"><label>Author URL</label><input type="text" id="authorUrl" value="${escapeHtml(embed.author.url)}"></div>
+            <div class="form-group"><label>Thumbnail URL</label><input type="text" id="thumbUrl" value="${escapeHtml(embed.thumbnail.url)}"></div>
+            <div class="form-group"><label>Main Image URL</label><input type="text" id="imageUrl" value="${escapeHtml(embed.image.url)}"></div>
+            <div class="form-group"><label>Footer Text</label><input type="text" id="footerText" value="${escapeHtml(embed.footer.text)}"></div>
+            <div class="form-group"><label>Footer Icon URL</label><input type="text" id="footerIcon" value="${escapeHtml(embed.footer.icon_url)}"></div>
+            <div class="form-group"><label>Timestamp (ISO)</label><input type="text" id="timestampVal" value="${embed.timestamp || ''}"></div>
+            <div class="form-group"><label>Fields</label><div id="fieldsDynamicContainer" class="fields-container"></div><button type="button" id="addFieldBtn" class="add-field-btn">+ Add field</button></div>
+        `;
+
+        createEmojiPicker('emojiPickerTitle', 'titleInput');
+        createEmojiPicker('emojiPickerDesc', 'descInput');
+        document.getElementById('emojiBtnTitle')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const picker = document.getElementById('emojiPickerTitle');
+            picker.style.display = picker.style.display === 'flex' ? 'none' : 'flex';
+        });
+        document.getElementById('emojiBtnDesc')?.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const picker = document.getElementById('emojiPickerDesc');
+            picker.style.display = picker.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        document.getElementById('titleInput')?.addEventListener('input', (e) => { embed.title = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('descInput')?.addEventListener('input', (e) => { embed.description = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('colorPicker')?.addEventListener('input', (e) => { embed.color = parseInt(e.target.value.slice(1), 16); updatePreviewAndJson(); });
+        document.getElementById('authorName')?.addEventListener('input', (e) => { embed.author.name = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('authorIcon')?.addEventListener('input', (e) => { embed.author.icon_url = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('authorUrl')?.addEventListener('input', (e) => { embed.author.url = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('thumbUrl')?.addEventListener('input', (e) => { embed.thumbnail.url = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('imageUrl')?.addEventListener('input', (e) => { embed.image.url = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('footerText')?.addEventListener('input', (e) => { embed.footer.text = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('footerIcon')?.addEventListener('input', (e) => { embed.footer.icon_url = e.target.value; updatePreviewAndJson(); });
+        document.getElementById('timestampVal')?.addEventListener('input', (e) => { embed.timestamp = e.target.value || null; updatePreviewAndJson(); });
+
+        const fieldsContainer = document.getElementById('fieldsDynamicContainer');
+        function renderFields() {
+            if (!fieldsContainer) return;
+            fieldsContainer.innerHTML = '';
+            embed.fields.forEach((f, idx) => {
+                const div = document.createElement('div'); div.className = 'field-item';
+                div.innerHTML = `<input placeholder="Name" class="f-name" value="${escapeHtml(f.name)}"><textarea placeholder="Value" class="f-value">${escapeHtml(f.value)}</textarea><label><input type="checkbox" class="f-inline" ${f.inline ? 'checked' : ''}> Inline</label><button class="remove-field">Remove</button>`;
+                div.querySelector('.f-name').addEventListener('input', (e) => { embed.fields[idx].name = e.target.value; updatePreviewAndJson(); });
+                div.querySelector('.f-value').addEventListener('input', (e) => { embed.fields[idx].value = e.target.value; updatePreviewAndJson(); });
+                div.querySelector('.f-inline').addEventListener('change', (e) => { embed.fields[idx].inline = e.target.checked; updatePreviewAndJson(); });
+                div.querySelector('.remove-field').addEventListener('click', () => { embed.fields.splice(idx,1); renderFields(); updatePreviewAndJson(); });
+                fieldsContainer.appendChild(div);
+            });
+        }
+        renderFields();
+        document.getElementById('addFieldBtn')?.addEventListener('click', () => { embed.fields.push({ name: "New", value: "", inline: false }); renderFields(); updatePreviewAndJson(); });
+    }
+
+    function updatePreviewAndJson() {
+        updatePreview();
+        if (currentMode === "visual") updateJsonEditorFromVisual();
+    }
+
+    function updatePreview() {
+        const container = document.getElementById('previewContainer');
+        if (!container) return;
+        let html = '';
+        const simpleMsg = simpleMessageInput.value;
+        if (simpleMsg.trim() !== '') html += `<div class="preview-simple-message">${escapeHtml(simpleMsg)}</div>`;
+        for (const emb of embeds) {
+            const colorHex = intToHex(emb.color);
+            html += `<div class="preview-embed" style="border-left: 2px solid ${colorHex};"><div>
+                        ${emb.author?.name ? `<div class="embed-author">${emb.author.icon_url ? `<img src="${emb.author.icon_url}" onerror="this.style.display='none'">` : ''}<span>${escapeHtml(emb.author.name)}</span></div>` : ''}
+                        ${emb.title ? `<div class="embed-title">${escapeHtml(emb.title)}</div>` : ''}
+                        ${emb.description ? `<div class="embed-desc">${escapeHtml(emb.description)}</div>` : ''}
+                        ${emb.fields?.length ? `<div class="embed-fields">${emb.fields.map(f => `<div class="field" style="${f.inline ? 'flex:1' : 'width:100%'}"><div class="field-name">${escapeHtml(f.name)}</div><div class="field-value">${escapeHtml(f.value)}</div></div>`).join('')}</div>` : ''}
+                        ${emb.image?.url ? `<div class="embed-img"><img src="${emb.image.url}" onerror="this.style.display='none'"></div>` : ''}
+                        ${emb.thumbnail?.url ? `<div class="embed-thumb"><img src="${emb.thumbnail.url}" onerror="this.style.display='none'"></div>` : ''}
+                        ${(emb.footer?.text || emb.timestamp) ? `<div class="embed-footer">${emb.footer?.text ? `<span>${escapeHtml(emb.footer.text)}</span>` : ''}${emb.timestamp ? `<span>${new Date(emb.timestamp).toLocaleString()}</span>` : ''}</div>` : ''}
+                    </div></div>`;
+        }
+        if (!html) html = '<div style="color:#b5bac1;text-align:center;">No content to preview</div>';
+        container.innerHTML = html;
+    }
+
+    function getFullPayload() {
+        const content = simpleMessageInput.value.trim();
+        const payload = { embeds: embeds.map(e => {
+            const clean = JSON.parse(JSON.stringify(e));
+            if(clean.color) clean.color = Number(clean.color);
+            if(clean.timestamp === "") delete clean.timestamp;
+            if(clean.author && !clean.author.name) delete clean.author;
+            if(clean.footer && !clean.footer.text) delete clean.footer;
+            if(clean.thumbnail && !clean.thumbnail.url) delete clean.thumbnail;
+            if(clean.image && !clean.image.url) delete clean.image;
+            if(clean.fields && clean.fields.length===0) delete clean.fields;
+            return clean;
+        }) };
+        if(content) payload.content = content;
+        return payload;
+    }
+
+    function updateJsonEditorFromVisual() {
+        const payload = getFullPayload();
+        jsonTextarea.value = JSON.stringify(payload, null, 2);
+        document.getElementById('jsonStatus').innerHTML = '✅ JSON synced.';
+    }
+
+    function applyJsonToVisual() {
+        try {
+            const parsed = JSON.parse(jsonTextarea.value);
+            if (!parsed || typeof parsed !== 'object') throw new Error("Invalid object");
+            let newEmbeds = parsed.embeds;
+            if (!Array.isArray(newEmbeds)) newEmbeds = [];
+            newEmbeds = newEmbeds.map(emb => ({
+                title: emb.title || "",
+                description: emb.description || "",
+                color: typeof emb.color === 'number' ? emb.color : 0x5865f2,
+                author: { name: emb.author?.name || "", icon_url: emb.author?.icon_url || "", url: emb.author?.url || "" },
+                footer: { text: emb.footer?.text || "", icon_url: emb.footer?.icon_url || "" },
+                timestamp: emb.timestamp || null,
+                thumbnail: { url: emb.thumbnail?.url || "" },
+                image: { url: emb.image?.url || "" },
+                fields: Array.isArray(emb.fields) ? emb.fields.map(f => ({ name: f.name || "", value: f.value || "", inline: !!f.inline })) : []
+            }));
+            if (newEmbeds.length === 0) newEmbeds = [{ title: "New Embed", description: "", color: 0x5865f2, author: { name: "", icon_url: "", url: "" }, footer: { text: "", icon_url: "" }, timestamp: null, thumbnail: { url: "" }, image: { url: "" }, fields: [] }];
+            embeds = newEmbeds;
+            selectedEmbedIndex = 0;
+            if (parsed.content !== undefined) simpleMessageInput.value = parsed.content || "";
+            rebuildEditorUI();
+            updatePreview();
+            if (currentMode === "visual") updateJsonEditorFromVisual();
+            document.getElementById('jsonStatus').innerHTML = '✅ Applied JSON.';
+            showStatus("JSON applied", true);
+        } catch (e) {
+            document.getElementById('jsonStatus').innerHTML = `❌ Invalid JSON: ${e.message}`;
+            showStatus("JSON error", false);
+        }
+    }
+
+    function formatJson() {
+        try {
+            const parsed = JSON.parse(jsonTextarea.value);
+            jsonTextarea.value = JSON.stringify(parsed, null, 2);
+            document.getElementById('jsonStatus').innerHTML = '✅ Formatted.';
+        } catch (e) {
+            document.getElementById('jsonStatus').innerHTML = `❌ Cannot format: ${e.message}`;
+        }
+    }
+
+    function setMode(mode) {
+        currentMode = mode;
+        if (mode === "visual") {
+            visualEditorDiv.style.display = "block";
+            jsonEditorDiv.style.display = "none";
+            document.getElementById('visualModeBtn').classList.add('active');
+            document.getElementById('jsonModeBtn').classList.remove('active');
+            updateJsonEditorFromVisual();
+        } else {
+            visualEditorDiv.style.display = "none";
+            jsonEditorDiv.style.display = "block";
+            document.getElementById('visualModeBtn').classList.remove('active');
+            document.getElementById('jsonModeBtn').classList.add('active');
+            updateJsonEditorFromVisual();
+        }
+    }
+
+    function refreshEmbedListUI() {
+        const container = document.getElementById('embedList');
+        if(!container) return;
+        container.innerHTML = '';
+        embeds.forEach((_, idx) => {
+            const tab = document.createElement('div');
+            tab.className = `embed-tab ${idx === selectedEmbedIndex ? 'active' : ''}`;
+            tab.innerHTML = `Embed ${idx+1} 
+                <button class="duplicate-embed" data-idx="${idx}" title="Duplicate"><i class="fas fa-copy"></i></button>
+                <button class="delete-embed" data-idx="${idx}" ${embeds.length === 1 ? 'disabled style="opacity:0.3;"' : ''}><i class="fas fa-trash"></i></button>`;
+            tab.addEventListener('click', (e) => { if(e.target.closest('.delete-embed') || e.target.closest('.duplicate-embed')) return; selectedEmbedIndex = idx; rebuildEditorUI(); refreshEmbedListUI(); updatePreviewAndJson(); });
+            const dupBtn = tab.querySelector('.duplicate-embed');
+            if(dupBtn) dupBtn.addEventListener('click', (e) => { e.stopPropagation(); duplicateEmbed(idx); });
+            const delBtn = tab.querySelector('.delete-embed');
+            if(delBtn && embeds.length > 1) delBtn.addEventListener('click', (e) => { e.stopPropagation(); embeds.splice(idx,1); if(selectedEmbedIndex >= embeds.length) selectedEmbedIndex = embeds.length-1; if(selectedEmbedIndex<0) selectedEmbedIndex=0; rebuildEditorUI(); refreshEmbedListUI(); updatePreviewAndJson(); });
+            container.appendChild(tab);
+        });
+    }
+
+    function duplicateEmbed(idx) {
+        const original = embeds[idx];
+        const copy = JSON.parse(JSON.stringify(original));
+        copy.title = copy.title + " (Copy)";
+        embeds.splice(idx + 1, 0, copy);
+        selectedEmbedIndex = idx + 1;
+        rebuildEditorUI();
+        refreshEmbedListUI();
+        updatePreviewAndJson();
+        showStatus(`✅ Duplicated embed ${idx+1}`, true);
+    }
+
+    function addNewEmbed() {
+        embeds.push({ title: "New Embed", description: "", color: 0x57f287, author: { name:"", icon_url:"", url:"" }, footer: { text:"", icon_url:"" }, timestamp: null, thumbnail: { url:"" }, image: { url:"" }, fields: [] });
+        selectedEmbedIndex = embeds.length-1;
+        rebuildEditorUI();
+        refreshEmbedListUI();
+        updatePreviewAndJson();
+    }
+
+    async function sendToDiscord() {
+        const url = document.getElementById('webhookUrl').value.trim();
+        if(!url || !url.startsWith('https://discord.com/api/webhooks/')) { showStatus("❌ Valid webhook URL required", false); return; }
+        const payload = getFullPayload();
+        try {
+            const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+            const text = await res.text();
+            if(res.ok) showStatus(`✅ Sent! ${embeds.length} embed(s)${payload.content ? ' + message' : ''}`, true);
+            else showStatus(`❌ Error ${res.status}: ${text}`, false);
+        } catch(e) { showStatus(`❌ Network error: ${e.message}`, false); }
+    }
+
+    function showStatus(msg, ok) { const div = document.getElementById('statusMsg'); div.innerHTML = `<i class="fas ${ok ? 'fa-check-circle' : 'fa-exclamation-triangle'}"></i> ${msg}`; div.style.background = ok ? '#1a3b2e' : '#3b2a2a'; setTimeout(() => div.style.background = '#111214', 2000); }
+
+    createEmojiPicker('emojiPickerMsg', 'simpleMessage');
+    document.getElementById('emojiBtnMsg')?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const picker = document.getElementById('emojiPickerMsg');
+        picker.style.display = picker.style.display === 'flex' ? 'none' : 'flex';
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.emoji-picker') && !e.target.closest('.emoji-btn')) {
+            document.querySelectorAll('.emoji-picker').forEach(p => p.style.display = 'none');
+        }
+    });
+
+    document.getElementById('sendBtn')?.addEventListener('click', sendToDiscord);
+    document.getElementById('addEmbedBtn')?.addEventListener('click', addNewEmbed);
+    simpleMessageInput?.addEventListener('input', () => { updatePreviewAndJson(); });
+    document.getElementById('visualModeBtn')?.addEventListener('click', () => setMode("visual"));
+    document.getElementById('jsonModeBtn')?.addEventListener('click', () => setMode("json"));
+    document.getElementById('applyJsonBtn')?.addEventListener('click', applyJsonToVisual);
+    document.getElementById('formatJsonBtn')?.addEventListener('click', formatJson);
+
+    rebuildEditorUI();
+    refreshEmbedListUI();
+    updatePreviewAndJson();
+    setMode("visual");
+    updateWebhookInfoDisplay();
+</script>
 </body>
 </html>
