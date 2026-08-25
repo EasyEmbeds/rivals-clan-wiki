@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Hacker Reporter</title>
+    <title>Roblox Hacker Reporter (Fixed)</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -23,44 +23,21 @@
             width: 400px;
             text-align: center;
         }
-        h2 {
-            margin-bottom: 1rem;
-            color: #00b894;
-        }
+        h2 { margin-bottom: 1rem; color: #00b894; }
         input {
-            width: 80%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #444;
-            background-color: #3d3d3d;
-            color: white;
-            border-radius: 5px;
+            width: 80%; padding: 10px; margin: 10px 0;
+            border: 1px solid #444; background-color: #3d3d3d;
+            color: white; border-radius: 5px;
         }
         button {
-            padding: 10px 20px;
-            background-color: #0984e3;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 16px;
+            padding: 10px 20px; background-color: #0984e3; color: white;
+            border: none; border-radius: 5px; cursor: pointer; font-size: 16px;
         }
-        button:hover {
-            background-color: #74b9ff;
-        }
+        button:hover { background-color: #74b9ff; }
         .log {
-            margin-top: 20px;
-            text-align: left;
-            max-height: 200px;
-            overflow-y: auto;
-            background-color: #1a1a1a;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 14px;
-        }
-        .log div {
-            margin: 2px 0;
+            margin-top: 20px; text-align: left; max-height: 200px;
+            overflow-y: auto; background-color: #1a1a1a; padding: 10px;
+            border-radius: 5px; font-family: monospace; font-size: 14px;
         }
     </style>
 </head>
@@ -68,10 +45,11 @@
 
 <div class="container">
     <h2>Roblox Hacker Reporter</h2>
-    <p>Enter a Roblox Profile URL to generate reports.</p>
+    <p>Paste Profile URL below.</p>
     
-    <input type="text" id="profileUrl" placeholder="https://www.roblox.com/users/12345678/Profile">
-    <button onclick="generateReports()">Generate Reports</button>
+    <!-- Input field -->
+    <input type="text" id="profileUrl" placeholder="https://www.roblox.com/users/12345678/Name">
+    <button onclick="generateReports()">Generate & Open Reports</button>
 
     <div class="log" id="reportLog"></div>
 </div>
@@ -80,46 +58,57 @@
     function generateReports() {
         const urlInput = document.getElementById('profileUrl').value;
         const logDiv = document.getElementById('reportLog');
-        logDiv.innerHTML = ''; // Clear previous logs
+        logDiv.innerHTML = ''; 
 
-        if (!urlInput) {
-            alert("Please enter a URL");
-            return;
-        }
+        if (!urlInput) { alert("Please enter a URL"); return; }
 
         try {
-            // Extract user ID from URL
-            // Supports: roblox.com/users/ID/Name or roblox.com/user/Name
+            // 1. Extract User ID
             let userId = "";
             const urlParts = urlInput.split('/');
             
-            // Check if it's a numeric ID
-            if (!isNaN(urlParts[urlParts.length - 2])) {
-                userId = urlParts[urlParts.length - 2];
-            } else {
-                // Fallback: assume last part is username, but for reporting we usually need ID or direct link
-                alert("Could not auto-extract numeric User ID. Ensure URL format is correct.");
+            // Try to find the numeric ID in the URL path
+            for (let part of urlParts) {
+                if (!isNaN(part) && part.length > 5) { // Roblox IDs are usually long numbers
+                    userId = part;
+                    break;
+                }
+            }
+
+            if (!userId) {
+                alert("Could not find numeric User ID. Ensure URL is correct.");
                 return;
             }
 
-            // Simulate "creating accounts" by generating multiple report entries
-            const reportCount = 5; // You can change this
+            // 2. Define Report Count
+            const reportCount = 5; 
+            let successCount = 0;
+
+            // 3. Loop and Open Tabs
             for (let i = 1; i <= reportCount; i++) {
-                const reportLink = `https://www.roblox.com/my/reports?targetId=${userId}&type=HACKING`;
+                // Roblox Public Report URL Format
+                // Note: This links directly to the "Hacking" category pre-selected
+                const reportUrl = `https://www.roblox.com/my/reports?targetId=${userId}&type=HACKING`;
                 
-                // Create a log entry
+                // Log it
                 const logEntry = document.createElement('div');
-                logEntry.innerHTML = `<span style="color:#00b894;">[+] Report #${i} Generated for ID: ${userId}</span>`;
+                logEntry.innerHTML = `<span style="color:#00b894;">[+] Report #${i} | ID: ${userId}</span>`;
                 logDiv.appendChild(logEntry);
 
-                // Open the report link in a new tab (simulating manual submission)
-                // You can remove this line if you only want to generate links
-                window.open(reportLink, '_blank');
+                // Open Tab (with small delay to prevent popup blockers)
+                setTimeout(() => {
+                    const newTab = window.open(reportUrl, '_blank');
+                    if (newTab && !newTab.closed) {
+                        successCount++;
+                    }
+                }, i * 200); // 200ms delay between each open
             }
 
-            const finalLog = document.createElement('div');
-            finalLog.innerHTML = `<span style="color:#0984e3;">[✓] ${reportCount} reports generated. Check your new tabs!</span>`;
-            logDiv.appendChild(finalLog);
+            setTimeout(() => {
+                const finalLog = document.createElement('div');
+                finalLog.innerHTML = `<span style="color:#0984e3;">[✓] Done. Check your tabs! (Allow popups if blocked)</span>`;
+                logDiv.appendChild(finalLog);
+            }, reportCount * 200 + 100);
 
         } catch (error) {
             logDiv.innerHTML = `<span style="color:#ff7675;">[-] Error: ${error.message}</span>`;
