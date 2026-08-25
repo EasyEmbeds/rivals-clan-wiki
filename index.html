@@ -1,517 +1,131 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ACE · ARCHITECT EVOLUTION</title>
-  <!-- Font Awesome -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      background: #0b0d15;
-      font-family: 'Segoe UI', Roboto, system-ui, -apple-system, sans-serif;
-      color: #eaeef2;
-      line-height: 1.5;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 2rem 1.5rem;
-    }
-
-    .gang-container {
-      max-width: 1100px;
-      width: 100%;
-      background: rgba(18, 22, 33, 0.75);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      border-radius: 3.5rem;
-      padding: 2.5rem 2.8rem;
-      box-shadow: 0 25px 45px -10px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 215, 0, 0.15);
-      border: 1px solid rgba(255, 215, 0, 0.1);
-      transition: all 0.2s;
-    }
-
-    /* header */
-    .gang-header {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 2rem;
-      border-bottom: 1px solid rgba(255, 215, 0, 0.2);
-      padding-bottom: 1.8rem;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-      flex-wrap: wrap;
-    }
-
-    .logo-wrapper {
-      width: 80px;
-      height: 80px;
-      border-radius: 50%;
-      background: #1e2337;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: 2px solid #f5b81b;
-      box-shadow: 0 0 20px rgba(245, 184, 27, 0.3);
-      overflow: hidden;
-    }
-
-    .logo-wrapper img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      display: block;
-    }
-
-    .title-group h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: 0.06em;
-      background: linear-gradient(135deg, #f5b81b, #f0d070);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-      text-shadow: 0 0 15px rgba(245, 184, 27, 0.25);
-    }
-
-    .title-group .motto {
-      font-size: 1.2rem;
-      font-weight: 500;
-      color: #d4d9e6;
-      letter-spacing: 0.2em;
-      background: rgba(255, 215, 0, 0.08);
-      padding: 0.2rem 1.2rem;
-      border-radius: 40px;
-      display: inline-block;
-      border: 1px solid rgba(255, 215, 0, 0.2);
-      backdrop-filter: blur(2px);
-    }
-
-    .mission-block {
-      background: rgba(245, 184, 27, 0.04);
-      border-left: 4px solid #f5b81b;
-      padding: 0.6rem 1.8rem;
-      border-radius: 60px;
-      font-weight: 500;
-      font-size: 1.1rem;
-      box-shadow: 0 0 12px rgba(245, 184, 27, 0.1);
-      backdrop-filter: blur(2px);
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-
-    .mission-block i {
-      color: #f5b81b;
-      margin-right: 0.3rem;
-    }
-
-    /* founder name badge */
-    .founder-badge {
-      background: rgba(245, 184, 27, 0.12);
-      border: 1px solid #f5b81b55;
-      padding: 0.2rem 1.2rem;
-      border-radius: 60px;
-      font-size: 0.9rem;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: #f5d47a;
-      font-weight: 600;
-      letter-spacing: 0.04em;
-    }
-
-    .founder-badge i {
-      color: #f5b81b;
-      font-size: 1rem;
-    }
-
-    /* discord link button */
-    .discord-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      background: #5865F2;
-      color: #fff;
-      padding: 0.4rem 1.4rem 0.4rem 1.2rem;
-      border-radius: 60px;
-      font-weight: 600;
-      font-size: 0.9rem;
-      text-decoration: none;
-      transition: all 0.2s;
-      border: 1px solid #5865F2;
-      box-shadow: 0 4px 12px rgba(88, 101, 242, 0.3);
-    }
-
-    .discord-link:hover {
-      background: #4752c4;
-      transform: scale(1.02);
-      box-shadow: 0 6px 18px rgba(88, 101, 242, 0.5);
-    }
-
-    .discord-link i {
-      font-size: 1.2rem;
-    }
-
-    /* departments */
-    .section-title {
-      font-size: 1.8rem;
-      font-weight: 600;
-      margin: 2.2rem 0 1.2rem 0;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      color: #f5e7c8;
-      letter-spacing: 0.02em;
-    }
-
-    .section-title i {
-      color: #f5b81b;
-      font-size: 1.6rem;
-    }
-
-    .dept-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 1.2rem;
-      margin-bottom: 1rem;
-    }
-
-    .dept-card {
-      background: rgba(30, 36, 55, 0.7);
-      backdrop-filter: blur(4px);
-      -webkit-backdrop-filter: blur(4px);
-      padding: 1.2rem 1.2rem 1.2rem 1.5rem;
-      border-radius: 30px;
-      border: 1px solid rgba(255, 215, 0, 0.08);
-      transition: all 0.2s ease;
-      display: flex;
-      align-items: center;
-      gap: 0.8rem;
-      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
-    }
-
-    .dept-card:hover {
-      background: rgba(45, 52, 78, 0.8);
-      border-color: rgba(245, 184, 27, 0.3);
-      transform: translateY(-3px);
-      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.6);
-    }
-
-    .dept-icon {
-      width: 40px;
-      height: 40px;
-      background: #1b212f;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.4rem;
-      color: #f5b81b;
-      border: 1px solid #f5b81b44;
-      flex-shrink: 0;
-    }
-
-    .dept-info h4 {
-      font-size: 1rem;
-      font-weight: 700;
-      color: #f5e7c8;
-    }
-
-    .dept-info p {
-      font-size: 0.78rem;
-      color: #b6bdd0;
-      line-height: 1.3;
-      opacity: 0.9;
-    }
-
-    /* rules */
-    .rules-list {
-      background: rgba(12, 16, 26, 0.6);
-      backdrop-filter: blur(4px);
-      border-radius: 40px;
-      padding: 1.8rem 2rem;
-      border: 1px solid rgba(255, 215, 0, 0.08);
-      margin: 0.8rem 0 0.5rem 0;
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem 2rem;
-    }
-
-    .rule-item {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      font-weight: 400;
-      font-size: 0.95rem;
-      background: rgba(245, 184, 27, 0.03);
-      padding: 0.2rem 0.8rem 0.2rem 0.3rem;
-      border-radius: 40px;
-    }
-
-    .rule-item i {
-      color: #f5b81b;
-      width: 20px;
-      font-size: 0.8rem;
-      text-align: center;
-    }
-
-    .rule-item strong {
-      color: #f5d47a;
-      font-weight: 600;
-    }
-
-    /* emergency hamburg */
-    .emergency-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.7rem;
-      background: #b71c1c20;
-      border: 1px solid #f5b81b55;
-      padding: 0.4rem 1.8rem 0.4rem 1.5rem;
-      border-radius: 60px;
-      font-size: 0.9rem;
-      letter-spacing: 0.04em;
-      color: #f5d4b0;
-      backdrop-filter: blur(4px);
-      margin-top: 2rem;
-      font-weight: 500;
-    }
-
-    .emergency-badge i {
-      color: #ffb347;
-      font-size: 1.1rem;
-    }
-
-    .emergency-badge span {
-      background: #f5b81b22;
-      padding: 0.1rem 1rem;
-      border-radius: 30px;
-      font-weight: 700;
-      color: #f5b81b;
-      margin-left: 0.3rem;
-    }
-
-    .home-link {
-      margin-top: 2.5rem;
-      display: flex;
-      justify-content: center;
-      gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-
-    .home-btn {
-      background: rgba(245, 184, 27, 0.08);
-      border: 1px solid #f5b81b44;
-      padding: 0.7rem 2.8rem;
-      border-radius: 60px;
-      color: #eaeef2;
-      text-decoration: none;
-      font-weight: 500;
-      letter-spacing: 0.1em;
-      transition: all 0.2s;
-      display: inline-flex;
-      align-items: center;
-      gap: 0.8rem;
-      backdrop-filter: blur(4px);
-    }
-
-    .home-btn i {
-      color: #f5b81b;
-    }
-
-    .home-btn:hover {
-      background: #f5b81b22;
-      border-color: #f5b81b;
-      box-shadow: 0 0 25px #f5b81b33;
-      transform: scale(1.02);
-    }
-
-    /* responsive */
-    @media (max-width: 700px) {
-      .gang-container {
-        padding: 1.8rem;
-        border-radius: 2.5rem;
-      }
-      .gang-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-      }
-      .title-group h1 {
-        font-size: 2rem;
-      }
-      .mission-block {
-        margin-top: 0.5rem;
-        width: 100%;
-        justify-content: center;
-        padding: 0.6rem 1rem;
-      }
-      .dept-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-      .founder-badge {
-        font-size: 0.8rem;
-        padding: 0.1rem 1rem;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .dept-grid {
-        grid-template-columns: 1fr;
-      }
-      .rules-list {
-        flex-direction: column;
-        gap: 0.4rem;
-        padding: 1.2rem;
-      }
-      .logo-wrapper {
-        width: 65px;
-        height: 65px;
-      }
-      .discord-link {
-        font-size: 0.8rem;
-        padding: 0.3rem 1rem;
-      }
-    }
-
-    ::-webkit-scrollbar {
-      width: 5px;
-      background: #11151f;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #f5b81b77;
-      border-radius: 20px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Hacker Reporter</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #1e1e1e;
+            color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: #2d2d2d;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+            width: 400px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 1rem;
+            color: #00b894;
+        }
+        input {
+            width: 80%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #444;
+            background-color: #3d3d3d;
+            color: white;
+            border-radius: 5px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #0984e3;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background-color: #74b9ff;
+        }
+        .log {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 200px;
+            overflow-y: auto;
+            background-color: #1a1a1a;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        .log div {
+            margin: 2px 0;
+        }
+    </style>
 </head>
 <body>
-  <div class="gang-container">
 
-    <!-- HEADER -->
-    <header class="gang-header">
-      <div class="brand">
-        <div class="logo-wrapper">
-          <img src="https://files.catbox.moe/efagc0.webp" alt="ACE Architect Evolution logo">
-        </div>
-        <div class="title-group">
-          <h1>ACE · EVOLUTION</h1>
-          <div class="motto">
-            <i class="fas fa-crown" style="color: #f5b81b;"></i> ACE ON TOP <i class="fas fa-crown" style="color: #f5b81b;"></i>
-          </div>
-        </div>
-      </div>
-      <div class="mission-block">
-        <span><i class="fas fa-skull-crossbones"></i> MISSION · Defeat all other gangs</span>
-        <!-- FOUNDER NAME displayed -->
-        <span class="founder-badge">
-          <i class="fas fa-user-astronaut"></i> FOUNDER · CONGA
-        </span>
-      </div>
-    </header>
+<div class="container">
+    <h2>Roblox Hacker Reporter</h2>
+    <p>Enter a Roblox Profile URL to generate reports.</p>
+    
+    <input type="text" id="profileUrl" placeholder="https://www.roblox.com/users/12345678/Profile">
+    <button onclick="generateReports()">Generate Reports</button>
 
-    <!-- DEPARTMENT SECTION -->
-    <div class="section-title">
-      <i class="fas fa-building"></i> DEPARTMENTS
-    </div>
+    <div class="log" id="reportLog"></div>
+</div>
 
-    <div class="dept-grid">
-      <div class="dept-card">
-        <div class="dept-icon"><i class="fas fa-crown"></i></div>
-        <div class="dept-info">
-          <h4>Founder</h4>
-          <p>Leads ACE & approves major decisions.</p>
-        </div>
-      </div>
-      <div class="dept-card">
-        <div class="dept-icon"><i class="fas fa-brain"></i></div>
-        <div class="dept-info">
-          <h4>Co-Founder</h4>
-          <p>Assists Founder & manages operations.</p>
-        </div>
-      </div>
-      <div class="dept-card">
-        <div class="dept-icon"><i class="fas fa-code"></i></div>
-        <div class="dept-info">
-          <h4>Developers</h4>
-          <p>Build & maintain the website.</p>
-        </div>
-      </div>
-      <div class="dept-card">
-        <div class="dept-icon"><i class="fas fa-paint-brush"></i></div>
-        <div class="dept-info">
-          <h4>Designers</h4>
-          <p>Logos, graphics, and UI.</p>
-        </div>
-      </div>
-      <div class="dept-card">
-        <div class="dept-icon"><i class="fas fa-users"></i></div>
-        <div class="dept-info">
-          <h4>Community Team</h4>
-          <p>Manage members & events.</p>
-        </div>
-      </div>
-      <div class="dept-card">
-        <div class="dept-icon"><i class="fas fa-shield-alt"></i></div>
-        <div class="dept-info">
-          <h4>Moderators</h4>
-          <p>Enforce rules & handle reports.</p>
-        </div>
-      </div>
-    </div>
+<script>
+    function generateReports() {
+        const urlInput = document.getElementById('profileUrl').value;
+        const logDiv = document.getElementById('reportLog');
+        logDiv.innerHTML = ''; // Clear previous logs
 
-    <!-- RULES -->
-    <div class="section-title" style="margin-top: 2.5rem;">
-      <i class="fas fa-gavel"></i> RULES
-    </div>
+        if (!urlInput) {
+            alert("Please enter a URL");
+            return;
+        }
 
-    <div class="rules-list">
-      <div class="rule-item"><i class="fas fa-check-circle"></i> <strong>Respect</strong> everyone.</div>
-      <div class="rule-item"><i class="fas fa-ban"></i> <strong>No</strong> harassment.</div>
-      <div class="rule-item"><i class="fas fa-eye-slash"></i> <strong>No</strong> leaking information.</div>
-      <div class="rule-item"><i class="fas fa-lock"></i> <strong>No</strong> abusing permissions.</div>
-      <div class="rule-item"><i class="fas fa-user-tie"></i> <strong>Follow</strong> staff instructions.</div>
-    </div>
+        try {
+            // Extract user ID from URL
+            // Supports: roblox.com/users/ID/Name or roblox.com/user/Name
+            let userId = "";
+            const urlParts = urlInput.split('/');
+            
+            // Check if it's a numeric ID
+            if (!isNaN(urlParts[urlParts.length - 2])) {
+                userId = urlParts[urlParts.length - 2];
+            } else {
+                // Fallback: assume last part is username, but for reporting we usually need ID or direct link
+                alert("Could not auto-extract numeric User ID. Ensure URL format is correct.");
+                return;
+            }
 
-    <!-- EMERGENCY HAMBURG + DISCORD LINK -->
-    <div style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 2rem;">
-      <div class="emergency-badge">
-        <i class="fas fa-ambulance"></i> EMERGENCY HAMBURG · ROBLOX 
-        <span>ACE</span>
-        <i class="fas fa-gamepad" style="margin-left: 0.2rem;"></i>
-      </div>
+            // Simulate "creating accounts" by generating multiple report entries
+            const reportCount = 5; // You can change this
+            for (let i = 1; i <= reportCount; i++) {
+                const reportLink = `https://www.roblox.com/my/reports?targetId=${userId}&type=HACKING`;
+                
+                // Create a log entry
+                const logEntry = document.createElement('div');
+                logEntry.innerHTML = `<span style="color:#00b894;">[+] Report #${i} Generated for ID: ${userId}</span>`;
+                logDiv.appendChild(logEntry);
 
-      <!-- DISCORD SERVER LINK -->
-      <a href="https://discord.gg/vU9z39Ak4" target="_blank" class="discord-link">
-        <i class="fab fa-discord"></i> JOIN DISCORD
-      </a>
-    </div>
+                // Open the report link in a new tab (simulating manual submission)
+                // You can remove this line if you only want to generate links
+                window.open(reportLink, '_blank');
+            }
 
-    <!-- HOME + optional extra -->
-    <div class="home-link">
-      <a href="#" class="home-btn" onclick="alert('🏠 ACE — ARCHITECT EVOLUTION · Home'); return false;">
-        <i class="fas fa-home"></i> HOME
-      </a>
-    </div>
+            const finalLog = document.createElement('div');
+            finalLog.innerHTML = `<span style="color:#0984e3;">[✓] ${reportCount} reports generated. Check your new tabs!</span>`;
+            logDiv.appendChild(finalLog);
 
-    <!-- footer -->
-    <div style="margin-top: 1.8rem; text-align: center; font-size: 0.7rem; letter-spacing: 0.1em; color: #7a829b; border-top: 1px solid #1e243a; padding-top: 1.2rem;">
-      <i class="fas fa-globe-americas" style="color: #f5b81b66;"></i> ACE · ARCHITECT EVOLUTION · FOUNDER CONGA
-    </div>
-  </div>
+        } catch (error) {
+            logDiv.innerHTML = `<span style="color:#ff7675;">[-] Error: ${error.message}</span>`;
+        }
+    }
+</script>
+
 </body>
 </html>
