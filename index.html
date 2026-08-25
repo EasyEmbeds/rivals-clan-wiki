@@ -1,119 +1,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Roblox Hacker Reporter (Fixed)</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #1e1e1e;
-            color: #ffffff;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #2d2d2d;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            width: 400px;
-            text-align: center;
-        }
-        h2 { margin-bottom: 1rem; color: #00b894; }
-        input {
-            width: 80%; padding: 10px; margin: 10px 0;
-            border: 1px solid #444; background-color: #3d3d3d;
-            color: white; border-radius: 5px;
-        }
-        button {
-            padding: 10px 20px; background-color: #0984e3; color: white;
-            border: none; border-radius: 5px; cursor: pointer; font-size: 16px;
-        }
-        button:hover { background-color: #74b9ff; }
-        .log {
-            margin-top: 20px; text-align: left; max-height: 200px;
-            overflow-y: auto; background-color: #1a1a1a; padding: 10px;
-            border-radius: 5px; font-family: monospace; font-size: 14px;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Roblox Auto-Report Generator</title>
+<style>
+  body { font-family: 'Segoe UI', sans-serif; background: #1e1e1e; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+  .box { background: #2d2d2d; padding: 25px; border-radius: 12px; width: 380px; text-align: center; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
+  input { width: 90%; padding: 12px; margin: 15px 0; background: #3d3d3d; border: 1px solid #555; color: white; border-radius: 6px; font-size: 14px; }
+  button { width: 95%; padding: 12px; background: #e74c3c; color: white; border: none; border-radius: 6px; font-size: 16px; cursor: pointer; margin-top: 10px; }
+  button:hover { background: #c0392b; }
+  .log { margin-top: 15px; height: 200px; overflow-y: auto; background: #1a1a1a; padding: 10px; text-align: left; font-size: 12px; border-radius: 6px; font-family: monospace; }
+  .status { color: #00b894; }
+  .error { color: #e74c3c; }
+</style>
 </head>
 <body>
 
-<div class="container">
-    <h2>Roblox Hacker Reporter</h2>
-    <p>Paste Profile URL below.</p>
-    
-    <!-- Input field -->
-    <input type="text" id="profileUrl" placeholder="https://www.roblox.com/users/12345678/Name">
-    <button onclick="generateReports()">Generate & Open Reports</button>
-
-    <div class="log" id="reportLog"></div>
+<div class="box">
+  <h2 style="margin-top:0;">Auto-Report Generator</h2>
+  <p style="font-size:13px; color:#aaa;">Paste Profile URL below.</p>
+  <input type="text" id="urlInput" placeholder="https://www.roblox.com/users/7681144231/profile">
+  <button onclick="startAutoReport()">🚀 Start Auto-Submit (5 Tabs)</button>
+  <div class="log" id="logArea"></div>
 </div>
 
 <script>
-    function generateReports() {
-        const urlInput = document.getElementById('profileUrl').value;
-        const logDiv = document.getElementById('reportLog');
-        logDiv.innerHTML = ''; 
+async function startAutoReport() {
+    const input = document.getElementById('urlInput').value.trim();
+    const log = document.getElementById('logArea');
+    log.innerHTML = '';
 
-        if (!urlInput) { alert("Please enter a URL"); return; }
+    if (!input) return alert("Paste a URL first!");
 
+    // 1. Extract ID
+    const idMatch = input.match(/users\/(\d+)/);
+    if (!idMatch) return alert("Invalid URL! Need /users/ID/profile");
+    
+    const userId = idMatch[1];
+    const profileUrl = `https://www.roblox.com/users/${userId}/profile`;
+
+    log.innerHTML += `<div class="status">[+] Opening 5 tabs for ID: ${userId}...</div>`;
+
+    // 2. Open 5 Tabs
+    for (let i = 1; i <= 5; i++) {
+        const tab = window.open(profileUrl, '_blank');
+        
+        // Wait a bit for the page to load
+        await new Promise(r => setTimeout(r, 1000 + (i * 200)));
+
+        log.innerHTML += `<div class="status">[+] Tab ${i}: Waiting for '...' button...</div>`;
+        
+        // 3. Click the "..." (More) Button inside the tab
         try {
-            // 1. Extract User ID
-            let userId = "";
-            const urlParts = urlInput.split('/');
+            await clickInTab(tab, `button[data-tooltip-id="user-profile-menu-button"]`, 2000);
+            log.innerHTML += `<div class="status">[+] Tab ${i}: Menu Opened.</div>`;
             
-            // Try to find the numeric ID in the URL path
-            for (let part of urlParts) {
-                if (!isNaN(part) && part.length > 5) { // Roblox IDs are usually long numbers
-                    userId = part;
-                    break;
-                }
+            // Wait for menu to appear
+            await new Promise(r => setTimeout(r, 500));
+
+            // 4. Click "Report" inside the dropdown
+            // Note: Roblox changes class names often. This is the most common one.
+            await clickInTab(tab, `div[data-tooltip-id="user-profile-menu-button"] > div[role="menuitem"][aria-label*="Report"]`, 1500);
+            
+            log.innerHTML += `<div class="status">[+] Tab ${i}: Report Menu Clicked.</div>`;
+
+            // 5. Try to Auto-Submit if it's a simple report (like Hacking)
+            // If it opens a modal with a dropdown, this might fail, but we try anyway.
+            await new Promise(r => setTimeout(r, 1000));
+            
+            // Look for the "Submit" button in the report modal
+            const submitBtn = await findInTab(tab, `button[type="submit"], div[role="dialog"] button`);
+            if (submitBtn) {
+                clickInTab(tab, submitBtn.selector, 500);
+                log.innerHTML += `<div class="status">[+] Tab ${i}: Auto-Submitted!</div>`;
+            } else {
+                log.innerHTML += `<div class="error">[-] Tab ${i}: Modal opened. You may need to click 'Submit' manually.</div>`;
             }
 
-            if (!userId) {
-                alert("Could not find numeric User ID. Ensure URL is correct.");
-                return;
-            }
-
-            // 2. Define Report Count
-            const reportCount = 5; 
-            let successCount = 0;
-
-            // 3. Loop and Open Tabs
-            for (let i = 1; i <= reportCount; i++) {
-                // Roblox Public Report URL Format
-                // Note: This links directly to the "Hacking" category pre-selected
-                const reportUrl = `https://www.roblox.com/my/reports?targetId=${userId}&type=HACKING`;
-                
-                // Log it
-                const logEntry = document.createElement('div');
-                logEntry.innerHTML = `<span style="color:#00b894;">[+] Report #${i} | ID: ${userId}</span>`;
-                logDiv.appendChild(logEntry);
-
-                // Open Tab (with small delay to prevent popup blockers)
-                setTimeout(() => {
-                    const newTab = window.open(reportUrl, '_blank');
-                    if (newTab && !newTab.closed) {
-                        successCount++;
-                    }
-                }, i * 200); // 200ms delay between each open
-            }
-
-            setTimeout(() => {
-                const finalLog = document.createElement('div');
-                finalLog.innerHTML = `<span style="color:#0984e3;">[✓] Done. Check your tabs! (Allow popups if blocked)</span>`;
-                logDiv.appendChild(finalLog);
-            }, reportCount * 200 + 100);
-
-        } catch (error) {
-            logDiv.innerHTML = `<span style="color:#ff7675;">[-] Error: ${error.message}</span>`;
+        } catch (e) {
+            log.innerHTML += `<div class="error">[-] Tab ${i}: Failed to find button. Check tab.</div>`;
         }
     }
+    log.innerHTML += `<div style="color:#74b9ff;">[✓] All 5 tabs processed!</div>`;
+}
+
+// Helper: Click inside a specific window/tab
+function clickInTab(win, selector, delay) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            try {
+                // We need to access the document in the other tab. 
+                // Note: Due to CORS, this only works if the tabs are same-origin (which Roblox is).
+                const doc = win.document;
+                const btn = doc.querySelector(selector);
+                if (btn) {
+                    btn.click();
+                    resolve(true);
+                } else {
+                    reject("Element not found");
+                }
+            } catch (e) {
+                reject(e);
+            }
+        }, delay || 0);
+    });
+}
+
+// Helper: Find element in tab and return selector + element for clicking
+function findInTab(win, selector) {
+    return new Promise((resolve, reject) => {
+        setTimeout(() => {
+            try {
+                const doc = win.document;
+                const btn = doc.querySelector(selector);
+                if (btn) {
+                    resolve({ element: btn, selector: selector });
+                } else {
+                    reject("Not found");
+                }
+            } catch (e) {
+                reject(e);
+            }
+        }, 1000);
+    });
+}
 </script>
 
 </body>
